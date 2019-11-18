@@ -54,8 +54,10 @@ class AddressForm extends Component<AddressFormProps & WithLanguageProps> {
             language,
             countriesWithAutocomplete,
             countryCode,
+            formFieldsShowHide,
             googleMapsApiKey,
             onAutocompleteToggle,
+            requiredPhoneNumberPS,
         } = this.props;
 
         return (
@@ -80,9 +82,15 @@ class AddressForm extends Component<AddressFormProps & WithLanguageProps> {
                             />
                         );
                     }
-
+                    
+                    const fieldShowPS = formFieldsShowHide;
+                    if(addressFieldName === 'firstName' || addressFieldName === 'lastName') {
+                        fieldShowPS = true;
+                    }
+                    
                     return (
                         <DynamicFormField
+                            displayField={ fieldShowPS }
                             field={ field }
                             // stateOrProvince can sometimes be a dropdown or input, so relying on id is not sufficient
                             fieldType={ this.getDynamicFormFieldType(field) }
@@ -92,6 +100,7 @@ class AddressForm extends Component<AddressFormProps & WithLanguageProps> {
                                 (fieldName ? `${fieldName}.customFields` : 'customFields') :
                                 fieldName }
                             placeholder={ translatedPlaceholderId && language.translate(translatedPlaceholderId) }
+                            requiredPhoneNumberFinalPS={ requiredPhoneNumberPS }
                         />
                     );
                 }) }

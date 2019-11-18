@@ -28,6 +28,7 @@ const ERROR_KEYS: { [fieldName: string]: string } = {
 export default memoize(function getAddressValidationSchema({
     formFields,
     language,
+    requiredBillingPhoneNumber,
 }: AddressValidationSchemaOptions): ObjectSchema<Partial<AddressFormValues>> {
     const translate: (
         key: string,
@@ -38,6 +39,9 @@ export default memoize(function getAddressValidationSchema({
         ...formFields
             .filter(({ custom }) => !custom)
             .reduce((schema, { name, required }) => {
+                if(name === 'phone' && requiredBillingPhoneNumber === false) {
+                    required = false;
+                }
                 schema[name] = string();
 
                 if (required) {
@@ -45,7 +49,7 @@ export default memoize(function getAddressValidationSchema({
                         translate(`${ERROR_KEYS[name]}_required_error`)
                     );
                 }
-
+               
                 return schema;
             },
             {} as { [key: string]: StringSchema }

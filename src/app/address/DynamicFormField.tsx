@@ -69,11 +69,19 @@ const DynamicFormField: FunctionComponent<DynamicFormFieldProps>  = ({
     fieldType,
     parentFieldName,
     onChange,
+    displayField,
+    requiredPhoneNumberFinalPS,
     placeholder,
 }) => {
+
     const addressFieldName = name;
     const fieldInputId = getFormFieldInputId(addressFieldName);
     const fieldName = parentFieldName ? `${parentFieldName}.${name}` : name;
+
+    if(fieldName === 'phone' && requiredPhoneNumberFinalPS === false) {
+        required = false;
+    }
+
     const translatedLabelString = LABEL[name];
 
     const label = useMemo(() => (
@@ -118,11 +126,12 @@ const DynamicFormField: FunctionComponent<DynamicFormFieldProps>  = ({
         maxLength,
         min,
         options,
+        displayField,
         placeholder,
     ]);
 
     return (
-        <div className={ `dynamic-form-field dynamic-form-field--${getFormFieldLegacyName(addressFieldName)}` }>
+        <div className={ `dynamic-form-field dynamic-form-field--${getFormFieldLegacyName(addressFieldName)} ${!displayField ? 'inActiveFieldPS' : 'activeFieldPS'}` }>
             { fieldType === DynamicFormFieldType.checkbox ?
                 <CheckboxGroupFormField
                     id={ fieldInputId }

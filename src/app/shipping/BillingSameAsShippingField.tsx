@@ -9,12 +9,15 @@ export interface BillingSameAsShippingFieldProps {
 
 const BillingSameAsShippingField: FunctionComponent<BillingSameAsShippingFieldProps>  = ({
     onChange,
+    checkShippingDiv,
+    checkBoxValue,
 }) => {
     const labelContent = useMemo(() => (
         <TranslatedString id="billing.use_shipping_address_label" />
     ), []);
 
     return <CheckboxFormField
+        additionalClassName={ `${!checkShippingDiv ? 'inActiveFieldPS' : 'activeFieldPS'}` }
         id="sameAsBilling"
         labelContent={ labelContent }
         name="billingSameAsShipping"

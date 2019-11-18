@@ -1,0 +1,11 @@
+{
+  "normalStoreUrl": "https://staging.epicshops.com/",
+  "accessToken": "9q7v0e361338zzjp1b52cub0yskixkg",
+  "port": 3000,
+  "customLayouts": {
+    "brand": {},
+    "category": {},
+    "page": {},
+    "product": {}
+  }
+}

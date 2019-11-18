@@ -50,6 +50,7 @@ class BillingForm extends PureComponent<BillingFormProps & WithLanguageProps & F
             setFieldValue,
             shouldShowOrderComments,
             values,
+            requiredBillingPhoneNumber,
         } = this.props;
 
         const { isResettingAddress } = this.state;
@@ -79,7 +80,9 @@ class BillingForm extends PureComponent<BillingFormProps & WithLanguageProps & F
                                 countriesWithAutocomplete={ countriesWithAutocomplete }
                                 countryCode={ values.countryCode }
                                 formFields={ getFields(values.countryCode) }
+                                formFieldsShowHide={ true }
                                 googleMapsApiKey={ googleMapsApiKey }
+                                requiredPhoneNumberPS={ requiredBillingPhoneNumber }
                                 setFieldValue={ setFieldValue }
                             />
                         </LoadingOverlay> }
@@ -126,6 +129,7 @@ class BillingForm extends PureComponent<BillingFormProps & WithLanguageProps & F
 }
 
 export default withLanguage(withFormik<BillingFormProps & WithLanguageProps, BillingFormValues>({
+    
     handleSubmit: (values, { props: { onSubmit } }) => {
         onSubmit(values);
     },
@@ -141,19 +145,23 @@ export default withLanguage(withFormik<BillingFormProps & WithLanguageProps, Bil
         billingAddress,
         getFields,
         language,
+        requiredBillingPhoneNumber,
     }) => (
         !!billingAddress && getAddressValidationSchema({
             language,
             formFields: getFields(billingAddress.countryCode),
+            requiredBillingPhoneNumber,
         }).isValidSync(billingAddress)
     ),
     validationSchema: ({
         language,
         getFields,
+        requiredBillingPhoneNumber,
     }: BillingFormProps & WithLanguageProps) => (
         lazy<Partial<AddressFormValues>>(values => getAddressValidationSchema({
             language,
             formFields: getFields(values && values.countryCode),
+            requiredBillingPhoneNumber,
         }))
     ),
     enableReinitialize: true,

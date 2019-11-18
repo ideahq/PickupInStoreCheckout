@@ -66,6 +66,7 @@ class ShippingForm extends Component<ShippingFormProps & WithLanguageProps> {
             shouldShowOrderComments,
             signOut,
             updateAddress,
+            requiredShippingPhoneNumber,
         } = this.props;
 
         return isMultiShippingMode ?
@@ -98,14 +99,20 @@ class ShippingForm extends Component<ShippingFormProps & WithLanguageProps> {
                 getFields={ getFields }
                 googleMapsApiKey={ googleMapsApiKey }
                 initialize={ initialize }
+                isDeliveryAdressShow={ this.props.isDeliveryAddressCheck }
+                isLoadingAxiosPS={ this.props.isLoadingAxios }
                 isLoading={ isLoading }
                 isMultiShippingMode={ isMultiShippingMode }
+                isPickupStoreShow={ this.props.isPickupStoreCheck }
                 methodId={ methodId }
                 onSubmit={ onSingleShippingSubmit }
                 onUnhandledError={ onUnhandledError }
                 shippingAddress={ shippingAddress }
+                shippingSameAsBilling={ 'off' }
                 shouldShowOrderComments={ shouldShowOrderComments }
                 signOut={ signOut }
+                storePickupOptionsPS={ this.props.storePickupOptions }
+                requiredBillingPhoneNumber={ requiredShippingPhoneNumber }
                 updateAddress={ updateAddress }
             />;
     }
