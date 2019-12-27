@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { Address, Country, FormField } from '@bigcommerce/checkout-sdk';
 import { memoize } from '@bigcommerce/memoize';
 import { forIn, noop } from 'lodash';
@@ -16,6 +17,8 @@ export interface AddressFormProps {
     countriesWithAutocomplete?: string[];
     countries?: Country[];
     formFields: FormField[];
+    formFieldsShowHide: any;
+    requiredPhoneNumberPS: any;
     googleMapsApiKey?: string;
     onAutocompleteSelect?(address: Partial<Address>): void;
     onAutocompleteToggle?(state: { inputValue: string; isOpen: boolean }): void;
@@ -82,12 +85,11 @@ class AddressForm extends Component<AddressFormProps & WithLanguageProps> {
                             />
                         );
                     }
-                    
-                    const fieldShowPS = formFieldsShowHide;
-                    if(addressFieldName === 'firstName' || addressFieldName === 'lastName') {
+                    let fieldShowPS = formFieldsShowHide;
+                    if (addressFieldName === 'firstName' || addressFieldName === 'lastName') {
                         fieldShowPS = true;
                     }
-                    
+
                     return (
                         <DynamicFormField
                             displayField={ fieldShowPS }

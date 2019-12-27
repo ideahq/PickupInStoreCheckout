@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { Address, CheckoutSelectors, Consignment, Country, CustomerAddress, CustomerRequestOptions, FormField, ShippingInitializeOptions, ShippingRequestOptions } from '@bigcommerce/checkout-sdk';
 import { withFormik, FormikProps } from 'formik';
 import { debounce, noop } from 'lodash';
@@ -38,6 +39,13 @@ export interface SingleShippingFormProps {
     onUnhandledError?(error: Error): void;
     signOut(options?: CustomerRequestOptions): void;
     updateAddress(address: Partial<Address>): Promise<CheckoutSelectors>;
+    selectedOption?: any;
+    shippingSameAsBilling?: any;
+    requiredBillingPhoneNumber?: any;
+    isDeliveryAdressShow?: any;
+    isPickupStoreShow?: any;
+    isLoadingAxiosPS?: any;
+    storePickupOptionsPS?: any;
 }
 
 export interface SingleShippingFormValues {
@@ -47,8 +55,14 @@ export interface SingleShippingFormValues {
 }
 
 interface SingleShippingFormState {
+    addressPS?: any;
+    checkBoxValue?: any;
+    checkShippingDiv?: any;
+    firstNamePS?: any;
     isResettingAddress: boolean;
     isUpdatingShippingData: boolean;
+    lastNamePS?: any;
+    selectedOption: boolean;
 }
 
 export const SHIPPING_AUTOSAVE_DELAY = 1000;
@@ -98,7 +112,6 @@ class SingleShippingForm extends PureComponent<SingleShippingFormProps & WithLan
             deinitialize,
             signOut,
             values: { shippingAddress: addressForm },
-            requiredBillingPhoneNumber,
         } = this.props;
 
         const {
@@ -177,8 +190,8 @@ class SingleShippingForm extends PureComponent<SingleShippingFormProps & WithLan
                         
                     <div className="form-body">
                         <BillingSameAsShippingField 
-                            checkShippingDiv={ this.state.checkShippingDiv }
-                            checkBoxValue={ this.state.checkBoxValue }
+                            checkShippingDiv={ checkShippingDiv }
+                            checkBoxValue={ checkBoxValue }
                         />
                     </div>
                 </Fieldset>

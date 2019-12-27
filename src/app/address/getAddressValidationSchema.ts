@@ -8,6 +8,7 @@ import DynamicFormFieldType from './DynamicFormFieldType';
 export interface AddressValidationSchemaOptions {
     formFields: FormField[];
     language?: LanguageService;
+    requiredBillingPhoneNumber?: any;
 }
 
 const ERROR_KEYS: { [fieldName: string]: string } = {
@@ -39,7 +40,7 @@ export default memoize(function getAddressValidationSchema({
         ...formFields
             .filter(({ custom }) => !custom)
             .reduce((schema, { name, required }) => {
-                if(name === 'phone' && requiredBillingPhoneNumber === false) {
+                if (name === 'phone' && requiredBillingPhoneNumber === false) {
                     required = false;
                 }
                 schema[name] = string();
@@ -49,7 +50,7 @@ export default memoize(function getAddressValidationSchema({
                         translate(`${ERROR_KEYS[name]}_required_error`)
                     );
                 }
-               
+
                 return schema;
             },
             {} as { [key: string]: StringSchema }

@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { Address, Cart, CheckoutSelectors, Consignment, ConsignmentAssignmentRequestBody, Country, CustomerAddress, CustomerRequestOptions, FormField, ShippingInitializeOptions, ShippingRequestOptions } from '@bigcommerce/checkout-sdk';
 import React, { Component, ReactNode } from 'react';
 
@@ -32,6 +33,11 @@ export interface ShippingFormProps {
     onSingleShippingSubmit(values: SingleShippingFormValues): void;
     onUnhandledError(error: Error): void;
     onUseNewAddress(address: Address, itemId: string): void;
+    requiredShippingPhoneNumber?: any;
+    isDeliveryAddressCheck?: any;
+    isLoadingAxios?: any;
+    isPickupStoreCheck?: any;
+    storePickupOptions?: any;
     signOut(options?: CustomerRequestOptions): void;
     updateAddress(address: Partial<Address>): Promise<CheckoutSelectors>;
 }
