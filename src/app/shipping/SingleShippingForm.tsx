@@ -46,6 +46,7 @@ export interface SingleShippingFormProps {
     isPickupStoreShow?: any;
     isLoadingAxiosPS?: any;
     storePickupOptionsPS?: any;
+    checkBoxValueOpt?: any;
 }
 
 export interface SingleShippingFormValues {
@@ -124,7 +125,6 @@ class SingleShippingForm extends PureComponent<SingleShippingFormProps & WithLan
         this.setState({ checkShippingDiv: true });
 
         this.setState({ checkBoxValue: true });
-
         if(shippingSameAsBilling !== 'off') {
             this.setState({ checkShippingDiv: false });
 
@@ -400,8 +400,8 @@ export default withLanguage(withFormik<SingleShippingFormProps & WithLanguagePro
     handleSubmit: (values, { props: { onSubmit } }) => {
         onSubmit(values);
     },
-    mapPropsToValues: ({ getFields, shippingAddress,  customerMessage }) => ({
-        billingSameAsShipping: false,
+    mapPropsToValues: ({ getFields, shippingAddress,  customerMessage, shippingSameAsBilling }) => ({
+        billingSameAsShipping: shippingSameAsBilling === 'always' ? true : false,
         orderComment: customerMessage,
         shippingAddress: mapAddressToFormValues(
             getFields(shippingAddress && shippingAddress.countryCode),

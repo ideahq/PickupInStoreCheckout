@@ -16,6 +16,7 @@ import { withLanguage, TranslatedString, WithLanguageProps } from '../locale';
 import { PromotionBannerList } from '../promotion';
 import { isUsingMultiShipping, StaticConsignment } from '../shipping';
 import { FlashMessage } from '../ui/alert';
+import { Button, ButtonVariant } from '../ui/button';
 import { LazyContainer, LoadingNotification, LoadingOverlay } from '../ui/loading';
 import { MobileView } from '../ui/responsive';
 
@@ -26,8 +27,6 @@ import CheckoutStep from './CheckoutStep';
 import CheckoutStepStatus from './CheckoutStepStatus';
 import CheckoutStepType from './CheckoutStepType';
 import CheckoutSupport from './CheckoutSupport';
-
-import { Button, ButtonVariant } from '../ui/button';
 
 const Billing = lazy(() => retry(() => import(
     /* webpackChunkName: "billing" */
@@ -66,6 +65,7 @@ export interface CheckoutProps {
     embeddedSupport: CheckoutSupport;
     errorLogger: ErrorLogger;
     flashMessages?: FlashMessage[]; // TODO: Expose flash messages from SDK
+    shippingSameAsBilling?: any;
     createEmbeddedMessenger(options: EmbeddedCheckoutMessengerOptions): EmbeddedCheckoutMessenger;
     createStepTracker(): StepTracker;
     subscribeToNewsletter(data: { email: string; firstName?: string }): void;
@@ -78,6 +78,7 @@ export interface CheckoutState {
     error?: Error;
     isDeliveryAddress: boolean;
     isPickupStore: boolean;
+    shippingSameAsBilling?: any;
     isMultiShippingMode: boolean;
     isCartEmpty: boolean;
     isRedirecting: boolean;
@@ -101,7 +102,7 @@ export interface WithCheckoutProps {
     promotions?: Promotion[];
     requireBillingPhone?: any;
     steps: CheckoutStepStatus[];
-    storeID:? any;
+    storeID: ? any;
     usableStoreCredit: number;
     clearError(error?: Error): void;
     loadCheckout(id: string, options?: RequestOptions<CheckoutParams>): Promise<CheckoutSelectors>;
@@ -133,8 +134,8 @@ class Checkout extends Component<CheckoutProps & WithCheckoutProps & WithLanguag
             embeddedStylesheet,
             loadCheckout,
             requireBillingPhone,
+            shippingSameAsBilling,
         } = this.props;
-
         try {
             const { data } = await loadCheckout(checkoutId, {
                 params: {
@@ -145,28 +146,30 @@ class Checkout extends Component<CheckoutProps & WithCheckoutProps & WithLanguag
                 },
             });
 
+            // tslint:disable-next-line: no-console
+
             const dataGetConfig = data.getConfig();
             const billingAddressPS = dataGetConfig.formFields.billingAddressFields;
 
-            const billingPhoneNumberObject = billingAddressPS.filter(function (val) { return val.name == "phone" });
-             
-            if(requireBillingPhone === false) {
+            const billingPhoneNumberObject = billingAddressPS.filter(function(val) { return val.name == 'phone' });
+
+            if (requireBillingPhone === false) {
                 billingPhoneNumberObject[0].required = false;
             }
 
-            if(defaultCheckoutCountry != '') {
+            if (defaultCheckoutCountry != '') {
                 data.getShippingAddress().countryCode = defaultCheckoutCountry;
                 data.getShippingAddress().stateOrProvince = '';
             }
 
             const { links: { siteLink = '' } = {} } = data.getConfig() || {};
             const messenger = createEmbeddedMessenger({ parentOrigin: siteLink });
-            
+
             this.embeddedMessenger = messenger;
             messenger.receiveStyles(styles => embeddedStylesheet.append(styles));
             messenger.postFrameLoaded({ contentId: containerId });
             messenger.postLoaded();
-            
+
             this.stepTracker = createStepTracker();
             this.stepTracker.trackCheckoutStarted();
 
@@ -326,6 +329,7 @@ class Checkout extends Component<CheckoutProps & WithCheckoutProps & WithLanguag
         }
         const isDeliveryAddress = this.state.isDeliveryAddress;
         const isPickupStore = this.state.isPickupStore;
+
         return (
             <CheckoutStep
                 { ...step }
@@ -344,7 +348,7 @@ class Checkout extends Component<CheckoutProps & WithCheckoutProps & WithLanguag
             >
                 <LazyContainer>
                     {
-                    enablePickUpStore ? 
+                    enablePickUpStore ?
                         <div className="pickup-store-buttons">
                             <Button
                                 id="ps-delivery-address"
@@ -364,7 +368,7 @@ class Checkout extends Component<CheckoutProps & WithCheckoutProps & WithLanguag
                             Pick Up In Store
                             </Button>
                         </div>
-                    : ""
+                    : ''
                     }
                     <Shipping
                         cartHasChanged={ hasCartChanged }
@@ -379,8 +383,9 @@ class Checkout extends Component<CheckoutProps & WithCheckoutProps & WithLanguag
                         onUnhandledError={ this.handleUnhandledError }
                         requiredShippingPhoneNumber={ true }
                         storePickupOptions = { this.state.pickup_store_options }
+                        customOptionPop = { this.props.shippingSameAsBilling }
                     />
-                    
+
                 </LazyContainer>
             </CheckoutStep>
         );
@@ -394,7 +399,7 @@ class Checkout extends Component<CheckoutProps & WithCheckoutProps & WithLanguag
           axios.get(`${window.location.origin}/content/pickupStore_${this.props.storeID}.json`)
             .then(res => this.setState({
               loading: false,
-              pickup_store_options:res.data.pickupstore,
+              pickup_store_options: res.data.pickupstore,
             }));
         });
     };
@@ -406,7 +411,7 @@ class Checkout extends Component<CheckoutProps & WithCheckoutProps & WithLanguag
 
     private renderBillingStep(step: CheckoutStepStatus): ReactNode {
         const { billingAddress, requireBillingPhone } = this.props;
-      
+
         return (
             <CheckoutStep
                 { ...step }
@@ -514,7 +519,7 @@ class Checkout extends Component<CheckoutProps & WithCheckoutProps & WithLanguag
         const { steps } = this.props;
         const activeStepIndex = findIndex(steps, { isActive: true });
         const activeStep = activeStepIndex >= 0 && steps[activeStepIndex];
-        
+
         if (!activeStep) {
             return;
         }

@@ -10,6 +10,7 @@ export type RenderCheckoutOptions = CheckoutAppProps;
 export default function renderCheckout({
     containerId,
     publicPath,
+    shippingSameAsBilling,
     ...props
 }: RenderCheckoutOptions): void {
     const configuredPublicPath = configurePublicPath(publicPath);
@@ -32,6 +33,7 @@ export default function renderCheckout({
         <CheckoutApp
             containerId={ containerId }
             publicPath={ configuredPublicPath }
+            shippingSameAsBilling={ shippingSameAsBilling }
             { ...props }
         />,
         document.getElementById(containerId)

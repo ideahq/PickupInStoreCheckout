@@ -38,6 +38,7 @@ export interface ShippingFormProps {
     isLoadingAxios?: any;
     isPickupStoreCheck?: any;
     storePickupOptions?: any;
+    shippingSameAsBilling?: any;
     signOut(options?: CustomerRequestOptions): void;
     updateAddress(address: Partial<Address>): Promise<CheckoutSelectors>;
 }
@@ -73,7 +74,11 @@ class ShippingForm extends Component<ShippingFormProps & WithLanguageProps> {
             signOut,
             updateAddress,
             requiredShippingPhoneNumber,
+            shippingSameAsBilling,
         } = this.props;
+
+        // tslint:disable-next-line: no-console
+        //console.log('shippingform', shippingSameAsBilling);
 
         return isMultiShippingMode ?
             <MultiShippingForm
@@ -114,7 +119,7 @@ class ShippingForm extends Component<ShippingFormProps & WithLanguageProps> {
                 onSubmit={ onSingleShippingSubmit }
                 onUnhandledError={ onUnhandledError }
                 shippingAddress={ shippingAddress }
-                shippingSameAsBilling={ 'off' }
+                shippingSameAsBilling={ shippingSameAsBilling }
                 shouldShowOrderComments={ shouldShowOrderComments }
                 signOut={ signOut }
                 storePickupOptionsPS={ this.props.storePickupOptions }
