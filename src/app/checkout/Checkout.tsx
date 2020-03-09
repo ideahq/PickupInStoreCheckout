@@ -1,5 +1,4 @@
 import { Address, Cart, CheckoutParams, CheckoutSelectors, Consignment, EmbeddedCheckoutMessenger, EmbeddedCheckoutMessengerOptions, Promotion, RequestOptions } from '@bigcommerce/checkout-sdk';
-import axios from 'axios';
 import classNames from 'classnames';
 import { find, findIndex } from 'lodash';
 import React, { lazy, Component, ReactNode } from 'react';
@@ -25,8 +24,6 @@ import CheckoutStep from './CheckoutStep';
 import CheckoutStepStatus from './CheckoutStepStatus';
 import CheckoutStepType from './CheckoutStepType';
 import CheckoutSupport from './CheckoutSupport';
-
-import { Button, ButtonVariant } from '../ui/button';
 
 const Billing = lazy(() => retry(() => import(
     /* webpackChunkName: "billing" */
@@ -106,10 +103,6 @@ class Checkout extends Component<CheckoutProps & WithCheckoutProps & WithLanguag
         isRedirecting: false,
         useStoreCredit: true,
         isMultiShippingMode: false,
-        isDeliveryAddress: true,
-        isPickupStore: false,
-        pickup_store_options: [],
-        loading: false,
     };
 
     private embeddedMessenger?: EmbeddedCheckoutMessenger;
@@ -120,10 +113,8 @@ class Checkout extends Component<CheckoutProps & WithCheckoutProps & WithLanguag
             containerId,
             createStepTracker,
             createEmbeddedMessenger,
-            defaultCheckoutCountry,
             embeddedStylesheet,
             loadCheckout,
-            requireBillingPhone,
         } = this.props;
 
         try {
@@ -135,28 +126,14 @@ class Checkout extends Component<CheckoutProps & WithCheckoutProps & WithLanguag
                     ] as any, // FIXME: Currently the enum is not exported so it can't be used here.
                 },
             });
-
-            const billingAddressPS = data.getConfig().formFields.billingAddressFields;
-
-            const billingPhoneNumberObject = billingAddressPS.filter(function (val) { return val.name == "phone" });
-             
-            if(requireBillingPhone === false) {
-                billingPhoneNumberObject[0].required = false;
-            }
-
-            if(defaultCheckoutCountry != '') {
-                data.getShippingAddress().countryCode = defaultCheckoutCountry;
-                data.getShippingAddress().stateOrProvince = '';
-            }
-
             const { links: { siteLink = '' } = {} } = data.getConfig() || {};
             const messenger = createEmbeddedMessenger({ parentOrigin: siteLink });
-            
+
             this.embeddedMessenger = messenger;
             messenger.receiveStyles(styles => embeddedStylesheet.append(styles));
             messenger.postFrameLoaded({ contentId: containerId });
             messenger.postLoaded();
-            
+
             this.stepTracker = createStepTracker();
             this.stepTracker.trackCheckoutStarted();
 
@@ -306,7 +283,6 @@ class Checkout extends Component<CheckoutProps & WithCheckoutProps & WithLanguag
             hasCartChanged,
             cart,
             consignments = [],
-            enablePickUpStore,
         } = this.props;
 
         const { isMultiShippingMode } = this.state;
@@ -314,8 +290,7 @@ class Checkout extends Component<CheckoutProps & WithCheckoutProps & WithLanguag
         if (!cart) {
             return;
         }
-        const isDeliveryAddress = this.state.isDeliveryAddress;
-        const isPickupStore = this.state.isPickupStore;
+
         return (
             <CheckoutStep
                 { ...step }
@@ -333,70 +308,23 @@ class Checkout extends Component<CheckoutProps & WithCheckoutProps & WithLanguag
                     </div>) }
             >
                 <LazyContainer>
-                    {
-                    enablePickUpStore ? 
-                        <div className="pickup-store-buttons">
-                            <Button
-                                id="ps-delivery-address"
-                                onClick={ this.handleDeliveryAddress }
-                                type="button"
-                                variant={ isDeliveryAddress ? ButtonVariant.Primary : ButtonVariant.Secondary }
-
-                            >
-                            Delivery Address
-                            </Button>
-                            <Button
-                                id="ps-pickup-store-address"
-                                onClick={ this.handlePickupStoreAddress }
-                                type="button"
-                                variant={ isPickupStore ? ButtonVariant.Primary : ButtonVariant.Secondary }
-                            >
-                            Pick Up In Store
-                            </Button>
-                        </div>
-                    : ""
-                    }
                     <Shipping
                         cartHasChanged={ hasCartChanged }
-                        isDeliveryAddressCheck={ this.state.isDeliveryAddress }
-                        isLoadingAxios={ this.state.loading }
                         isMultiShippingMode={ isMultiShippingMode }
-                        isPickupStoreCheck={ this.state.isPickupStore }
                         navigateNextStep={ this.handleShippingNextStep }
                         onReady={ this.handleReady }
                         onSignIn={ this.handleShippingSignIn }
                         onToggleMultiShipping={ this.handleToggleMultiShipping }
                         onUnhandledError={ this.handleUnhandledError }
-                        requiredShippingPhoneNumber={ true }
-                        storePickupOptions = { this.state.pickup_store_options }
                     />
-                    
                 </LazyContainer>
             </CheckoutStep>
         );
     }
 
-    private handlePickupStoreAddress: () => void = () => {
-        this.setState({isDeliveryAddress: false});
-        this.setState({isPickupStore: true});
-
-        this.setState({ loading: true }, () => {
-          axios.get(`${window.location.origin}/content/pickupStore_${this.props.storeID}.json`)
-            .then(res => this.setState({
-              loading: false,
-              pickup_store_options:res.data.pickupstore,
-            }));
-        });
-    };
-
-    private handleDeliveryAddress: () => void = () => {
-        this.setState({isDeliveryAddress: true});
-        this.setState({isPickupStore: false});
-    };
-
     private renderBillingStep(step: CheckoutStepStatus): ReactNode {
-        const { billingAddress, requireBillingPhone } = this.props;
-      
+        const { billingAddress } = this.props;
+
         return (
             <CheckoutStep
                 { ...step }
@@ -411,7 +339,6 @@ class Checkout extends Component<CheckoutProps & WithCheckoutProps & WithLanguag
                         navigateNextStep={ this.navigateToNextIncompleteStep }
                         onReady={ this.handleReady }
                         onUnhandledError={ this.handleUnhandledError }
-                        requiredBillingPhoneNumber={ requireBillingPhone }
                     />
                 </LazyContainer>
             </CheckoutStep>
@@ -504,7 +431,7 @@ class Checkout extends Component<CheckoutProps & WithCheckoutProps & WithLanguag
         const { steps } = this.props;
         const activeStepIndex = findIndex(steps, { isActive: true });
         const activeStep = activeStepIndex >= 0 && steps[activeStepIndex];
-        
+
         if (!activeStep) {
             return;
         }

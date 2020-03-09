@@ -88,7 +88,7 @@ const ShippingAddress: FunctionComponent<ShippingAddressProps> = props => {
             />
         );
     }
-  
+
     return (
         <ShippingAddressForm
             address={ shippingAddress }
@@ -98,13 +98,10 @@ const ShippingAddress: FunctionComponent<ShippingAddressProps> = props => {
             countriesWithAutocomplete={ countriesWithAutocomplete }
             formFields={ formFields }
             googleMapsApiKey={ googleMapsApiKey }
-            isDeliveryShowAddressFinal={ props.isDeliveryShowAddress }
             isLoading={ isLoading }
-            isPickupStoreShowAddressFinal={ props.isPickupStoreShowAddress }
             onAddressSelect={ onAddressSelect }
             onFieldChange={ onFieldChange }
             onUseNewAddress={ onUseNewAddress }
-            requiredPhoneNumberFinal={ props.requiredPhoneNumberShipping }
         />
     );
 };

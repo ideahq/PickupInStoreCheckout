@@ -68,12 +68,10 @@ class ShippingAddressForm extends Component<ShippingAddressFormProps & ConnectFo
                             countryCode={ formAddress && formAddress.countryCode }
                             fieldName={ addressFieldName }
                             formFields={ formFields }
-                            formFieldsShowHide={ this.props.isDeliveryShowAddressFinal }
                             googleMapsApiKey={ googleMapsApiKey }
                             onAutocompleteToggle={ this.handleAutocompleteToggle }
                             onChange={ this.handleChange }
                             setFieldValue={ this.setFieldValue }
-                            requiredPhoneNumberPS={ this.props.requiredPhoneNumberFinal }
                         />
                     </LoadingOverlay> }
             </Fieldset>
