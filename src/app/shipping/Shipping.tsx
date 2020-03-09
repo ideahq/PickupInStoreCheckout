@@ -43,7 +43,6 @@ export interface WithCheckoutShippingProps {
     shippingAddress?: Address;
     shouldShowMultiShipping: boolean;
     shouldShowOrderComments: boolean;
-    customOptionPop?: any;
     assignItem(consignment: ConsignmentAssignmentRequestBody): Promise<CheckoutSelectors>;
     deinitializeShippingMethod(options: ShippingRequestOptions): Promise<CheckoutSelectors>;
     deleteConsignments(): Promise<Address | undefined>;
@@ -65,8 +64,7 @@ interface ShippingState {
 class Shipping extends Component<ShippingProps & WithCheckoutShippingProps, ShippingState> {
     constructor(props: ShippingProps & WithCheckoutShippingProps) {
         super(props);
-        // tslint:disable-next-line: no-console
-        console.log('props=abcd', this.props.customOptionPop);
+
         this.state = {
             isInitializing: true,
         };
@@ -136,7 +134,6 @@ class Shipping extends Component<ShippingProps & WithCheckoutShippingProps, Ship
                         onSingleShippingSubmit={ this.handleSingleShippingSubmit }
                         onUseNewAddress={ this.handleUseNewAddress }
                         updateAddress={ updateShippingAddress }
-                        shippingSameAsBilling= { this.props.customOptionPop }
                     />
                 </LoadingOverlay>
             </div>

@@ -21,7 +21,6 @@ export interface CheckoutAppProps {
     flashMessages?: FlashMessage[]; // TODO: Expose flash messages from SDK
     publicPath?: string;
     sentryConfig?: BrowserOptions;
-    shippingSameAsBilling?: any;
 }
 
 export default class CheckoutApp extends Component<CheckoutAppProps> {
@@ -37,8 +36,7 @@ export default class CheckoutApp extends Component<CheckoutAppProps> {
 
     constructor(props: Readonly<CheckoutAppProps>) {
         super(props);
-        // tslint:disable-next-line: no-console
-        console.log('props', this.props.shippingSameAsBilling);
+
         this.errorLogger = createErrorLogger(
             { sentry: props.sentryConfig },
             {
@@ -67,7 +65,6 @@ export default class CheckoutApp extends Component<CheckoutAppProps> {
                             embeddedSupport={ this.embeddedSupport }
                             errorLogger={ this.errorLogger }
                             subscribeToNewsletter={ this.subscribeToNewsletter }
-                            shippingSameAsBilling = { this.props.shippingSameAsBilling }
                         />
                     </CheckoutProvider>
                 </LocaleProvider>
