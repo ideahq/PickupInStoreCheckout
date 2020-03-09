@@ -1,4 +1,3 @@
-/* eslint-disable */
 import { createCheckoutService, CheckoutService, FormField } from '@bigcommerce/checkout-sdk';
 import { mount, ReactWrapper } from 'enzyme';
 import { Formik } from 'formik';
@@ -39,8 +38,6 @@ describe('AddressForm Component', () => {
                     <AddressForm
                         fieldName="address"
                         formFields={ formFields }
-                        formFieldsShowHide={ {} }
-                        requiredPhoneNumberPS={ {} }
                     />
                 </Formik>
             </LocaleContext.Provider>
@@ -59,8 +56,6 @@ describe('AddressForm Component', () => {
                     <AddressForm
                         fieldName="address"
                         formFields={ formFields }
-                        formFieldsShowHide={ {} }
-                        requiredPhoneNumberPS={ {} }
                     />
                 </Formik>
             </LocaleContext.Provider>
@@ -95,8 +90,6 @@ describe('AddressForm Component', () => {
                     <AddressForm
                         formFields={ formFields }
                         onChange={ onChange }
-                        formFieldsShowHide={ {} }
-                        requiredPhoneNumberPS={ {} }
                     />
                 </Formik>
             </LocaleContext.Provider>

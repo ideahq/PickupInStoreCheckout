@@ -14,7 +14,6 @@ export type BillingFormValues = AddressFormValues & { orderComment: string };
 
 export interface BillingFormProps {
     billingAddress?: Address;
-    requiredBillingPhoneNumber?: any;
     customer: Customer;
     customerMessage: string;
     countries: Country[];
@@ -130,6 +129,7 @@ class BillingForm extends PureComponent<BillingFormProps & WithLanguageProps & F
 }
 
 export default withLanguage(withFormik<BillingFormProps & WithLanguageProps, BillingFormValues>({
+    
     handleSubmit: (values, { props: { onSubmit } }) => {
         onSubmit(values);
     },

@@ -1,4 +1,3 @@
-/* eslint-disable */
 import { FormField as FormFieldType } from '@bigcommerce/checkout-sdk';
 import { FieldProps } from 'formik';
 import React, { memo, useCallback, useMemo, FunctionComponent } from 'react';
@@ -54,8 +53,6 @@ export interface DynamicFormFieldProps {
     placeholder?: string;
     fieldType?: DynamicFormFieldType;
     onChange?(value: string | string[]): void;
-    displayField?: any;
-    requiredPhoneNumberFinalPS?: any;
 }
 
 const DynamicFormField: FunctionComponent<DynamicFormFieldProps>  = ({
@@ -81,7 +78,7 @@ const DynamicFormField: FunctionComponent<DynamicFormFieldProps>  = ({
     const fieldInputId = getFormFieldInputId(addressFieldName);
     const fieldName = parentFieldName ? `${parentFieldName}.${name}` : name;
 
-    if (fieldName === 'phone' && requiredPhoneNumberFinalPS === false) {
+    if(fieldName === 'phone' && requiredPhoneNumberFinalPS === false) {
         required = false;
     }
 
@@ -123,13 +120,13 @@ const DynamicFormField: FunctionComponent<DynamicFormFieldProps>  = ({
         />
     ), [
         addressFieldName,
-        displayField,
         fieldInputId,
         fieldType,
         max,
         maxLength,
         min,
         options,
+        displayField,
         placeholder,
     ]);
 

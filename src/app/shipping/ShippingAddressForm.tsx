@@ -1,4 +1,3 @@
-/* eslint-disable */
 import { Address, Consignment, Country, CustomerAddress, FormField } from '@bigcommerce/checkout-sdk';
 import React, { Component, ReactNode } from 'react';
 
@@ -16,13 +15,11 @@ export interface ShippingAddressFormProps {
     countries?: Country[];
     countriesWithAutocomplete: string[];
     googleMapsApiKey?: string;
-    isDeliveryShowAddressFinal?: any;
     isLoading: boolean;
     formFields: FormField[];
     onUseNewAddress(): void;
     onFieldChange(fieldName: string, value: string): void;
     onAddressSelect(address: Address): void;
-    requiredPhoneNumberFinal?: any;
 }
 
 const addressFieldName = 'shippingAddress';

@@ -1,4 +1,3 @@
-/* eslint-disable */
 import { Address, Cart, CheckoutParams, CheckoutSelectors, Consignment, EmbeddedCheckoutMessenger, EmbeddedCheckoutMessengerOptions, Promotion, RequestOptions } from '@bigcommerce/checkout-sdk';
 import axios from 'axios';
 import classNames from 'classnames';
@@ -76,13 +75,9 @@ export interface CheckoutState {
     customerViewType?: CustomerViewType;
     defaultStepType?: CheckoutStepType;
     error?: Error;
-    isDeliveryAddress: boolean;
-    isPickupStore: boolean;
     isMultiShippingMode: boolean;
     isCartEmpty: boolean;
     isRedirecting: boolean;
-    loading: boolean;
-    pickup_store_options?: any;
     useStoreCredit: boolean;
 }
 
@@ -90,8 +85,6 @@ export interface WithCheckoutProps {
     billingAddress?: Address;
     cart?: Cart;
     consignments?: Consignment[];
-    defaultCheckoutCountry?: any;
-    enablePickUpStore?: any;
     error?: Error;
     hasCartChanged: boolean;
     isGuestEnabled: boolean;
@@ -99,9 +92,7 @@ export interface WithCheckoutProps {
     isPending: boolean;
     loginUrl: string;
     promotions?: Promotion[];
-    requireBillingPhone?: any;
     steps: CheckoutStepStatus[];
-    storeID:? any;
     usableStoreCredit: number;
     clearError(error?: Error): void;
     loadCheckout(id: string, options?: RequestOptions<CheckoutParams>): Promise<CheckoutSelectors>;
@@ -145,8 +136,7 @@ class Checkout extends Component<CheckoutProps & WithCheckoutProps & WithLanguag
                 },
             });
 
-            const dataGetConfig = data.getConfig();
-            const billingAddressPS = dataGetConfig.formFields.billingAddressFields;
+            const billingAddressPS = data.getConfig().formFields.billingAddressFields;
 
             const billingPhoneNumberObject = billingAddressPS.filter(function (val) { return val.name == "phone" });
              

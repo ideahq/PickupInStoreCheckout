@@ -1,4 +1,3 @@
-/* eslint-disable */
 import { Address, CheckoutSelectors, Consignment, Country, CustomerAddress, CustomerRequestOptions, FormField, ShippingInitializeOptions, ShippingRequestOptions } from '@bigcommerce/checkout-sdk';
 import { memoizeOne } from '@bigcommerce/memoize';
 import { noop } from 'lodash';
@@ -16,12 +15,9 @@ export interface ShippingAddressProps {
     googleMapsApiKey?: string;
     isLoading: boolean;
     methodId?: string;
-    requiredPhoneNumberShipping?: any;
     shippingAddress?: Address;
     deinitialize(options: ShippingRequestOptions): Promise<CheckoutSelectors>;
     initialize(options: ShippingInitializeOptions): Promise<CheckoutSelectors>;
-    isDeliveryShowAddress?: any;
-    isPickupStoreShowAddress?: any;
     onAddressSelect(address: Address): void;
     onFieldChange(name: string, value: string): void;
     onUnhandledError?(error: Error): void;
