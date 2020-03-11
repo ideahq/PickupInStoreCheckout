@@ -101,14 +101,12 @@ class Customer extends Component<CustomerProps & WithCheckoutCustomerProps> {
             createAccountUrl,
             email,
             forgotPasswordUrl,
-            isGuestEnabled,
             isSigningIn,
             signInError,
         } = this.props;
 
         return (
             <LoginForm
-                canCancel={ isGuestEnabled }
                 createAccountUrl={ createAccountUrl }
                 email={ this.draftEmail || email }
                 forgotPasswordUrl={ forgotPasswordUrl }

@@ -243,12 +243,11 @@ class Checkout extends Component<CheckoutProps & WithCheckoutProps & WithLanguag
 
     private renderCustomerStep(step: CheckoutStepStatus): ReactNode {
         const {
-            isGuestEnabled,
             subscribeToNewsletter,
         } = this.props;
 
         const {
-            customerViewType = isGuestEnabled ? CustomerViewType.Guest : CustomerViewType.Login,
+            customerViewType = CustomerViewType.Login,
         } = this.state;
 
         return (

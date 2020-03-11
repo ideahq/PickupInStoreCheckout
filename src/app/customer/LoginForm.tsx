@@ -31,7 +31,6 @@ export interface LoginFormValues {
 }
 
 const LoginForm: FunctionComponent<LoginFormProps & WithLanguageProps & FormikProps<LoginFormValues>> = ({
-    canCancel,
     forgotPasswordUrl,
     isSigningIn,
     language,
@@ -56,9 +55,11 @@ const LoginForm: FunctionComponent<LoginFormProps & WithLanguageProps & FormikPr
             >
                 { mapErrorMessage(signInError, key => language.translate(key)) }
             </Alert> }
-
             <p>
-                Don’t have an account? <a onClick={preventDefault(onCancel)}>Create an account</a> to continue.
+                Returning customers, sign in below.
+            </p>
+            <p>
+                New customers, <a onClick={preventDefault(onCancel)}>create an account here</a>.
             </p>
 
             <EmailField onChange={ onChangeEmail } />
@@ -75,16 +76,6 @@ const LoginForm: FunctionComponent<LoginFormProps & WithLanguageProps & FormikPr
                 >
                     <TranslatedString id="customer.sign_in_action" />
                 </Button>
-
-                { canCancel && <a
-                    className="button optimizedCheckout-buttonSecondary"
-                    data-test="customer-cancel-button"
-                    href="#"
-                    id="checkout-customer-cancel"
-                    onClick={ preventDefault(onCancel) }
-                >
-                    <TranslatedString id="common.cancel_action" />
-                </a> }
             </div>
         </Fieldset>
     </Form>

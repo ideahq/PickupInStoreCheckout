@@ -51,26 +51,6 @@ const GuestForm: FunctionComponent<GuestFormProps & WithLanguageProps & FormikPr
                     <TranslatedHtml id="customer.create_account"/>
                 </p>
 
-                <EmailField onChange={onChangeEmail}/>
-                <PasswordField forgotPasswordUrl={''}/>
-                {canSubscribe && <BasicFormField
-                    component={SubscribeField}
-                    name="shouldSubscribe"
-                />}
-
-                <div className="form-actions">
-                    <Button
-                        className="customerEmail-button"
-                        id="checkout-customer-continue"
-                        isLoading={isContinuingAsGuest}
-                        testId="customer-continue-as-guest-button"
-                        type="submit"
-                        variant={ButtonVariant.Primary}
-                    >
-                        <TranslatedString id="common.continue_action"/>
-                    </Button>
-                </div>
-
                 <p>
                     <TranslatedString id="customer.login_text"/>
                     {' '}
@@ -82,6 +62,25 @@ const GuestForm: FunctionComponent<GuestFormProps & WithLanguageProps & FormikPr
                         <TranslatedString id="customer.login_action"/>
                     </a>
                 </p>
+
+                <EmailField onChange={onChangeEmail}/>
+                <PasswordField forgotPasswordUrl={''}/>
+                {canSubscribe && <BasicFormField
+                    component={SubscribeField}
+                    name="shouldSubscribe"
+                />}
+
+                <div className="form-actions">
+                    <Button
+                        id="checkout-customer-continue"
+                        isLoading={isContinuingAsGuest}
+                        testId="customer-continue-as-guest-button"
+                        type="submit"
+                        variant={ButtonVariant.Primary}
+                    >
+                        <TranslatedString id="common.continue_action"/>
+                    </Button>
+                </div>
 
                 {checkoutButtons}
             </Fieldset>

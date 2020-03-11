@@ -8,7 +8,7 @@
       "cart-summary-drawer-28dc0578.js",
       "cart-summary-ef57f1a3.js",
       "cart-summary~cart-summary-drawer-362c385a.js",
-      "customer-7a3dd615.js",
+      "customer-c63e8520.js",
       "order-summary-drawer-fe76660d.js",
       "order-summary-e904644e.js",
       "payment-4458f59c.js",
@@ -33,11 +33,11 @@
     ]
   },
   "js": [
-    "runtime-16561b0f.js",
+    "runtime-4aaf9068.js",
     "polyfill~checkout-f8505bc1.js",
     "transients~checkout-c3e382dc.js",
     "vendors~checkout-91bc5768.js",
-    "checkout-e694db3d.js"
+    "checkout-154c7186.js"
   ],
   "css": [
     "checkout-635f49c9.css"
