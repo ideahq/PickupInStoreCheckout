@@ -3,7 +3,7 @@ import React, { memo, FunctionComponent } from 'react';
 import { object, string } from 'yup';
 
 import { preventDefault } from '../common/dom';
-import { withLanguage, TranslatedHtml, TranslatedString, WithLanguageProps } from '../locale';
+import { withLanguage, TranslatedString, WithLanguageProps } from '../locale';
 import { Alert, AlertType } from '../ui/alert';
 import { Button, ButtonVariant } from '../ui/button';
 import { Fieldset, Form, Legend } from '../ui/form';
@@ -32,7 +32,6 @@ export interface LoginFormValues {
 
 const LoginForm: FunctionComponent<LoginFormProps & WithLanguageProps & FormikProps<LoginFormValues>> = ({
     canCancel,
-    createAccountUrl,
     forgotPasswordUrl,
     isSigningIn,
     language,
@@ -59,10 +58,7 @@ const LoginForm: FunctionComponent<LoginFormProps & WithLanguageProps & FormikPr
             </Alert> }
 
             <p>
-                <TranslatedHtml
-                    data={ { url: createAccountUrl } }
-                    id="customer.create_account_to_continue_text"
-                />
+                Don’t have an account? <a onClick={preventDefault(onCancel)}>Create an account</a> to continue.
             </p>
 
             <EmailField onChange={ onChangeEmail } />

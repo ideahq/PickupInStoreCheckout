@@ -1,4 +1,4 @@
-import { Address, Cart, CheckoutParams, CheckoutSelectors, Consignment, EmbeddedCheckoutMessenger, EmbeddedCheckoutMessengerOptions, Promotion, RequestOptions } from '@bigcommerce/checkout-sdk';
+import { Address, Cart, CheckoutParams, CheckoutSelectors, CheckoutService, Consignment, EmbeddedCheckoutMessenger, EmbeddedCheckoutMessengerOptions, Promotion, RequestOptions } from '@bigcommerce/checkout-sdk';
 import classNames from 'classnames';
 import { find, findIndex } from 'lodash';
 import React, { lazy, Component, ReactNode } from 'react';
@@ -10,6 +10,7 @@ import { ErrorLogger, ErrorModal } from '../common/error';
 import { retry } from '../common/utility';
 import { CustomerInfo, CustomerSignOutEvent, CustomerViewType } from '../customer';
 import { isEmbedded, EmbeddedCheckoutStylesheet } from '../embeddedCheckout';
+import { AccountService } from '../guestSignup';
 import { withLanguage, TranslatedString, WithLanguageProps } from '../locale';
 import { PromotionBannerList } from '../promotion';
 import { isUsingMultiShipping, StaticConsignment } from '../shipping';
@@ -61,6 +62,7 @@ export interface CheckoutProps {
     embeddedStylesheet: EmbeddedCheckoutStylesheet;
     embeddedSupport: CheckoutSupport;
     errorLogger: ErrorLogger;
+    checkoutService: CheckoutService;
     flashMessages?: FlashMessage[]; // TODO: Expose flash messages from SDK
     createEmbeddedMessenger(options: EmbeddedCheckoutMessengerOptions): EmbeddedCheckoutMessenger;
     createStepTracker(): StepTracker;
@@ -76,6 +78,7 @@ export interface CheckoutState {
     isCartEmpty: boolean;
     isRedirecting: boolean;
     useStoreCredit: boolean;
+    createAccountOptions: {password?: string; shouldSubscribe?: boolean};
 }
 
 export interface WithCheckoutProps {
@@ -103,9 +106,11 @@ class Checkout extends Component<CheckoutProps & WithCheckoutProps & WithLanguag
         isRedirecting: false,
         useStoreCredit: true,
         isMultiShippingMode: false,
+        createAccountOptions: {password: '', shouldSubscribe: false},
     };
 
     private embeddedMessenger?: EmbeddedCheckoutMessenger;
+    private accountService = new AccountService();
 
     async componentDidMount(): Promise<void> {
         const {
@@ -264,7 +269,7 @@ class Checkout extends Component<CheckoutProps & WithCheckoutProps & WithLanguag
                     <Customer
                         checkEmbeddedSupport={ this.checkEmbeddedSupport }
                         onChangeViewType={ this.handleChangeCustomerViewType }
-                        onContinueAsGuest={ this.navigateToNextIncompleteStep }
+                        onContinueAsGuest={ this.onContinueAsGuest }
                         onContinueAsGuestError={ this.handleError }
                         onReady={ this.handleReady }
                         onSignIn={ this.navigateToNextIncompleteStep }
@@ -427,6 +432,13 @@ class Checkout extends Component<CheckoutProps & WithCheckoutProps & WithLanguag
         this.setState({ isMultiShippingMode: !isMultiShippingMode });
     };
 
+    private onContinueAsGuest: (options?: { password?: string; shouldSubscribe?: boolean; isDefault?: boolean }) => void = options => {
+        if (options && options.password) {
+            this.setState({createAccountOptions: options});
+        }
+        this.navigateToNextIncompleteStep(options);
+    };
+
     private navigateToNextIncompleteStep: (options?: { isDefault?: boolean }) => void = options => {
         const { steps } = this.props;
         const activeStepIndex = findIndex(steps, { isActive: true });
@@ -446,7 +458,7 @@ class Checkout extends Component<CheckoutProps & WithCheckoutProps & WithLanguag
     };
 
     private navigateToOrderConfirmation: () => void = () => {
-        const { steps } = this.props;
+        const { steps, checkoutService } = this.props;
 
         this.stepTracker.trackStepCompleted(steps[steps.length - 1].type);
 
@@ -454,9 +466,28 @@ class Checkout extends Component<CheckoutProps & WithCheckoutProps & WithLanguag
             this.embeddedMessenger.postComplete();
         }
 
-        this.setState({ isRedirecting: true }, () => {
-            navigateToOrderConfirmation();
-        });
+        const order = checkoutService.getState().data.getOrder();
+
+        if (order && order.orderId && this.state.createAccountOptions.password) {
+            this.accountService.create({
+                orderId: order.orderId,
+                newsletter: this.state.createAccountOptions.shouldSubscribe || false,
+                confirmPassword: this.state.createAccountOptions.password,
+                password: this.state.createAccountOptions.password,
+            })
+                .catch(error => {
+                    console.error(error);
+                })
+                .then(() => {
+                    this.setState({isRedirecting: true}, () => {
+                        navigateToOrderConfirmation();
+                    });
+                });
+        } else {
+            this.setState({isRedirecting: true}, () => {
+                navigateToOrderConfirmation();
+            });
+        }
     };
 
     private checkEmbeddedSupport: (methodIds: string[]) => boolean = methodIds => {

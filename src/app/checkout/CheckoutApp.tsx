@@ -63,6 +63,7 @@ export default class CheckoutApp extends Component<CheckoutAppProps> {
                             createStepTracker={ this.createStepTracker }
                             embeddedStylesheet={ this.embeddedStylesheet }
                             embeddedSupport={ this.embeddedSupport }
+                            checkoutService={ this.checkoutService }
                             errorLogger={ this.errorLogger }
                             subscribeToNewsletter={ this.subscribeToNewsletter }
                         />

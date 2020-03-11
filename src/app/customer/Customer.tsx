@@ -13,7 +13,7 @@ export interface CustomerProps {
     viewType: CustomerViewType;
     checkEmbeddedSupport?(methodIds: string[]): void;
     onChangeViewType?(viewType: CustomerViewType): void;
-    onContinueAsGuest?(): void;
+    onContinueAsGuest?(options: GuestFormValues): void;
     onContinueAsGuestError?(error: Error): void;
     onReady?(): void;
     onSignIn?(): void;
@@ -137,7 +137,7 @@ class Customer extends Component<CustomerProps & WithCheckoutCustomerProps> {
 
         try {
             await continueAsGuest({ email: formValues.email });
-            onContinueAsGuest();
+            onContinueAsGuest(formValues);
 
             this.draftEmail = undefined;
         } catch (error) {

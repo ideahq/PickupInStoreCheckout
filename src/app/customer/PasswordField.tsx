@@ -35,16 +35,21 @@ const PasswordField: FunctionComponent<PasswordFieldProps> = ({
         <TranslatedString id={ 'customer.password_label' } />
     ), []);
 
-    const footer = useMemo(() => (
-        <a
-            data-test="forgot-password-link"
-            href={ forgotPasswordUrl }
-            rel="noopener noreferrer"
-            target="_blank"
-        >
-            <TranslatedString id="customer.forgot_password_action" />
-        </a>
-    ), [forgotPasswordUrl]);
+    let footer;
+
+    if (forgotPasswordUrl.length !== 0) {
+        footer = useMemo(() => (
+            <a
+                data-test="forgot-password-link"
+                href={ forgotPasswordUrl }
+                rel="noopener noreferrer"
+                target="_blank"
+                style={{display: 'block', marginTop: '8px'}}
+            >
+                <TranslatedString id="customer.forgot_password_action" />
+            </a>
+        ), [forgotPasswordUrl]);
+    }
 
     return <FormField
         footer={ footer }
