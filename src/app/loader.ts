@@ -41,7 +41,7 @@ export function loadFiles(options?: LoadFilesOptions): Promise<LoadFilesResult> 
         js.map(path => joinPaths(publicPath, path))
     );
 
-    const prefetchedScripts = getScriptLoader().preloadScripts(
+    getScriptLoader().preloadScripts(
         jsDynamicChunks.map(path => joinPaths(publicPath, path)),
         { prefetch: true }
     );
@@ -51,14 +51,12 @@ export function loadFiles(options?: LoadFilesOptions): Promise<LoadFilesResult> 
         { prepend: true }
     );
 
-    const prefetchedStylesheets = getStylesheetLoader().preloadStylesheets(
+    getStylesheetLoader().preloadStylesheets(
         cssDynamicChunks.map(path => joinPaths(publicPath, path)),
         { prefetch: true }
     );
 
     return Promise.all([
-        prefetchedScripts,
-        prefetchedStylesheets,
         scripts,
         stylesheets,
     ])
